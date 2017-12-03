@@ -8,9 +8,28 @@
       :host {
         display: block;
       }
+
+      #container {
+
+      }
+      
+      #inputs {
+
+      }
+
+      .items {
+
+      }
+
+      .item {
+        
+      }
     </style>
     <div id="container"></div>
-    <slot name="input"></slot>
+    <div id="inputs">
+      <slot name="input"></slot>
+    </div>
+    
   </template>
 
   <script>
@@ -26,12 +45,8 @@
       static get is() { return 'elfy-bullets'; }
       static get properties() {
         return {
-
           items: {
             type: Array,
-            value() {
-              return [{val: 1}];
-            }
           },
 
           listTag: {
@@ -39,13 +54,9 @@
             value: 'li',
           },
 
-          listContainerTag: {
+          listParentTag: {
             type: String,
             value: 'ul',
-          },
-
-          addOnEnter: {
-            type: Boolean,
           },
 
           valuePath: {
@@ -62,7 +73,7 @@
 
       static get observers() {
         return [
-          '_createList(items.*, listContainerTag, listTag)'
+          '_createList(items.*, listParentTag, listTag)'
         ]
       }
 
@@ -79,6 +90,7 @@
         if (!val) {
           return;
         }
+        this.items = this.items || [];
         this.push('items', val);
       }
 
@@ -120,12 +132,15 @@
         return o;
       }
 
-      _createList(itemsChange, listContainerTag, listTag) {
+      _createList(itemsChange, listParentTag, listTag) {
         const items = itemsChange.base;
-        const container = document.createElement(listContainerTag);
+        if (!items || !Array.isArray(items)) {
+          return;
+        }
+        const parent = document.createElement(listParentTag);
         const c = this.shadowRoot.querySelector('#container');
 
-        container.classList.add('items');
+        parent.classList.add('items');
 
         while (c.firstChild) {
           c.removeChild(c.firstChild);
@@ -135,10 +150,10 @@
           const le = document.createElement(listTag);
           le.innerHTML = this._getItemValue(item);
           le.classList.add('item');
-          container.appendChild(le)
+          parent.appendChild(le)
         });
 
-        c.appendChild(container);
+        c.appendChild(parent);
       }
     }
 
