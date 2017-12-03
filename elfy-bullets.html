@@ -1,0 +1,147 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<link rel="import" href="../paper-input/paper-input.html">
+
+<dom-module id="elfy-bullets">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div id="container"></div>
+    <slot name="input"></slot>
+  </template>
+
+  <script>
+    /**
+     * `elfy-bullets`
+     * An easy way to create a small list of removeable items.
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ElfyBullets extends Polymer.Element {
+      static get is() { return 'elfy-bullets'; }
+      static get properties() {
+        return {
+
+          items: {
+            type: Array,
+            value() {
+              return [{val: 1}];
+            }
+          },
+
+          listTag: {
+            type: String,
+            value: 'li',
+          },
+
+          listContainerTag: {
+            type: String,
+            value: 'ul',
+          },
+
+          addOnEnter: {
+            type: Boolean,
+          },
+
+          valuePath: {
+            type: String,
+            value: 'val'
+          },
+
+          inputValuePath: {
+            type: String,
+            value: 'value',
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_createList(items.*, listContainerTag, listTag)'
+        ]
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        const slot = this.shadowRoot.querySelector('slot[name="input"]');
+        this._observer = new Polymer.FlattenedNodesObserver(slot, info => {
+          this._processNewInputNodes(info.addedNodes);
+        });
+      }
+
+      addItem(value) {
+        const val = this._getItem(value);
+        if (!val) {
+          return;
+        }
+        this.push('items', val);
+      }
+
+      _processAddition(e) {
+        this.addItem(e.target[this.inputValuePath]);
+        e.target[this.inputValuePath] = null;
+      }
+
+      _processEnter(e) {
+        if (e.keyCode !== 13) {
+          return;
+        }
+        this._processAddition(e);
+      }
+
+      _processNewInputNodes(nodes) {
+        nodes.forEach(n => {
+          const addEvent = n.getAttribute('add-event');
+          if (addEvent !== 'enter') {
+            n.addEventListener(addEvent, event => this._processAddition(event));
+          }
+          n.addEventListener('keydown', event => this._processEnter(event));
+        });
+      }
+
+      _getItemValue(item) {
+        if (!this.valuePath || !item) {
+          return item;
+        }
+        return item[this.valuePath];
+      }
+
+      _getItem(value) {
+        if (!this.valuePath || !value) {
+          return value;
+        }
+        const o = {};
+        o[this.valuePath] = value
+        return o;
+      }
+
+      _createList(itemsChange, listContainerTag, listTag) {
+        const items = itemsChange.base;
+        const container = document.createElement(listContainerTag);
+        const c = this.shadowRoot.querySelector('#container');
+
+        container.classList.add('items');
+
+        while (c.firstChild) {
+          c.removeChild(c.firstChild);
+        }
+
+        items.forEach(item => {
+          const le = document.createElement(listTag);
+          le.innerHTML = this._getItemValue(item);
+          le.classList.add('item');
+          container.appendChild(le)
+        });
+
+        c.appendChild(container);
+      }
+    }
+
+    window.customElements.define(ElfyBullets.is, ElfyBullets);
+  </script>
+</dom-module>
