@@ -29,6 +29,11 @@
     "arrow-parens": "off"
   },
   "globals": {
-    "Polymer": true
+    "Polymer": true,
+    "suite": true,
+    "test": true,
+    "fixture": true,
+    "assert": true,
+    "WCT": true
   }
 }
