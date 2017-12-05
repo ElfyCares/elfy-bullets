@@ -1,5 +1,8 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+
 <link rel="import" href="../paper-input/paper-input.html">
 
 <dom-module id="elfy-bullets">
@@ -10,26 +13,56 @@
 			}
 
 			#container {
-
+				@apply --elfy-bullets-container;
 			}
 			
 			#inputs {
-
+				@apply --elfy-bullets-inputs;
 			}
 
 			.items {
+				@apply --elfy-bullets-items;
+			}
 
+			div.item-text-container {
+				@apply --elfy-bullets-item-text-container;
 			}
 
 			.item {
-				
+				margin: 12px 0;
+				display: -ms-flexbox;
+				display: -webkit-flex;
+				display: flex;
+				-ms-flex-direction: row;
+				-webkit-flex-direction: row;
+				flex-direction: row;
+				@apply --elfy-bullets-item;
+			}
+
+			iron-icon.remove-btn {
+				--iron-icon-height: 1.2em;
+    			--iron-icon-width: 1.2em;
+				top: -0.5em;
+				opacity: 0.4;
+				margin-left: 0.5em;
+				padding: 0.1em;
+				cursor: pointer;
+				flex-grow: 0;
+    			flex-shrink: 0;
+				@apply --elfy-bullets-remove-button;
+			}
+
+			iron-icon.remove-btn:hover {
+				opacity: 1;
+				@apply --elfy-bullets-remove-button-hover;
 			}
 		</style>
 		<div id="container"></div>
 		<div id="inputs">
-			<slot name="input"></slot>
+			<slot name="input">
+				<paper-input add-event="enter"></paper-input>
+			</slot>
 		</div>
-		
 	</template>
 
 	<script>
@@ -108,7 +141,14 @@
 
 			_processNewInputNodes(nodes) {
 				nodes.forEach(n => {
+					if (!n || !n.getAttribute) {
+						return;
+					}
 					const addEvent = n.getAttribute('add-event');
+
+					if (!addEvent) {
+						return;
+					}
 					if (addEvent !== 'enter') {
 						n.addEventListener(addEvent, event => this._processAddition(event));
 					}
@@ -132,6 +172,10 @@
 				return o;
 			}
 
+			_removeItem(e) {
+				this.splice('items', e.target.itemIndex, 1);
+			}
+
 			_createList(itemsChange, listParentTag, listTag) {
 				const items = itemsChange.base;
 				if (!items || !Array.isArray(items)) {
@@ -146,10 +190,22 @@
 					c.removeChild(c.firstChild);
 				}
 
-				items.forEach(item => {
+				items.forEach((item, index) => {
 					const le = document.createElement(listTag);
-					le.innerHTML = this._getItemValue(item);
+					const div = document.createElement('div');
+					const removeBtn = document.createElement('iron-icon');
+
+					removeBtn.classList.add('remove-btn');
+					div.classList.add('item-text-container');
 					le.classList.add('item');
+		
+					removeBtn.icon = 'icons:close';
+					removeBtn.onclick = this._removeItem.bind(this);
+					removeBtn.itemIndex = index;
+					div.innerHTML = this._getItemValue(item);
+		
+					le.appendChild(div);
+					le.appendChild(removeBtn);
 					parent.appendChild(le);
 				});
 
