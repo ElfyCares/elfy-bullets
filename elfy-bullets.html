@@ -28,11 +28,11 @@
 				@apply --elfy-bullets-item-text-container;
 			}
 
-			.item {
+			.item-container {
 				margin: 12px 0;
 				display: -ms-flexbox;
-				display: -webkit-flex;
-				display: flex;
+				display: -webkit-inline-box;
+				display: inline-flex;
 				-ms-flex-direction: row;
 				-webkit-flex-direction: row;
 				flex-direction: row;
@@ -193,10 +193,12 @@
 				items.forEach((item, index) => {
 					const le = document.createElement(listTag);
 					const div = document.createElement('div');
+					const divItem = document.createElement('div');
 					const removeBtn = document.createElement('iron-icon');
 
 					removeBtn.classList.add('remove-btn');
 					div.classList.add('item-text-container');
+					divItem.classList.add('item-container');
 					le.classList.add('item');
 		
 					removeBtn.icon = 'icons:close';
@@ -204,8 +206,9 @@
 					removeBtn.itemIndex = index;
 					div.innerHTML = this._getItemValue(item);
 		
-					le.appendChild(div);
-					le.appendChild(removeBtn);
+					divItem.appendChild(div);
+					divItem.appendChild(removeBtn);
+					le.appendChild(divItem);
 					parent.appendChild(le);
 				});
 
