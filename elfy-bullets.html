@@ -78,25 +78,35 @@
 			static get is() {return 'elfy-bullets';}
 			static get properties() {
 				return {
+					/**
+					 * The added items.
+					 */
 					items: {
 						type: Array,
 					},
-
+					/**
+					 * The html tag for the list item.
+					 */
 					listTag: {
 						type: String,
 						value: 'li',
 					},
-
+					/**
+					 * The html parent tag for the list.
+					 */
 					listParentTag: {
 						type: String,
 						value: 'ul',
 					},
-
+					/**
+					 * The path to the text property.
+					 */
 					valuePath: {
 						type: String,
-						value: 'val',
 					},
-
+					/**
+					 * The value property of the input element.
+					 */
 					inputValuePath: {
 						type: String,
 						value: 'value',
@@ -118,13 +128,9 @@
 				});
 			}
 
-			addItem(value) {
-				const val = this._getItem(value);
-				if (!val) {
-					return;
-				}
+			addItem(item) {
 				this.items = this.items || [];
-				this.push('items', val);
+				this.push('items', item);
 			}
 
 			_processAddition(e) {
@@ -151,6 +157,7 @@
 					}
 					if (addEvent !== 'enter') {
 						n.addEventListener(addEvent, event => this._processAddition(event));
+						return;
 					}
 					n.addEventListener('keydown', event => this._processEnter(event));
 				});
@@ -161,15 +168,6 @@
 					return item;
 				}
 				return item[this.valuePath];
-			}
-
-			_getItem(value) {
-				if (!this.valuePath || !value) {
-					return value;
-				}
-				const o = {};
-				o[this.valuePath] = value;
-				return o;
 			}
 
 			_removeItem(e) {

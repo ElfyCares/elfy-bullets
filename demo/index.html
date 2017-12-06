@@ -10,6 +10,10 @@
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
+    
+    <link rel="import" href="../../elfy-address-input/elfy-address-input.html">
+    
     <link rel="import" href="../elfy-bullets.html">
 
     <custom-style>
@@ -22,7 +26,18 @@
       <h3>Basic elfy-bullets demo</h3>
       <demo-snippet>
         <template>
-          <elfy-bullets>
+          <elfy-bullets></elfy-bullets>
+        </template>
+      </demo-snippet>
+      <h3>elfy-address-input with elfy-bullets demo</h3>
+      <demo-snippet>
+        <template>
+          <elfy-bullets input-value-path="address" value-path="address_short">
+            <elfy-address-input slot="input"
+              api-key="AIzaSyAhZxTcdugRJlVv1kE3zxZwkKz174tjR7s" collapse
+              required="street,postalCode,streetNumber,state,country"
+              add-event="save-tapped" clear-input-on-clear-place>
+            </elfy-address-input>
           </elfy-bullets>
         </template>
       </demo-snippet>
