@@ -11,7 +11,7 @@ A Polymer 2 element to create a small list of removable items.
 
 ```
 <elfy-bullets input-value-path="address" value-path="address_short" list-tag="li" list-parent-tag="ul">
-  <elfy-address-input slot="input" api-key="AIzaSyAhZxTcdugRJlVv1kE3zxZwkKz174tjR7s" collapse required="street,postalCode,streetNumber,state,country" add-event="save-tapped" clear-input-on-clear-place>
+  <elfy-address-input slot="input" collapse required="street,postalCode,streetNumber,state,country" add-event="save-tapped" clear-input-on-clear-place>
   </elfy-address-input>
 </elfy-bullets>
 ```
