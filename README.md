@@ -4,7 +4,7 @@
 
 A Polymer 2 element to create a small list of removable items.
 
-![alt text](https://raw.githubusercontent.com/ElfyCares/elfy-address-input/master/demo/demo1.png)
+![alt text](https://raw.githubusercontent.com/ElfyCares/elfy-bullets/master/demo/demo1.png)
 
 
 ## Customize the input element and list tag
